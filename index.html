@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Operators Logic — Deterministic Autonomous Infrastructure</title>
+<meta name="description" content="Operators Logic: enterprise-grade autonomous AI operator orchestration and deterministic logic infrastructure. Replace probabilistic chat with verifiable, high-throughput operator pipelines." />
+<meta name="theme-color" content="#030712" />
+<meta property="og:title" content="Operators Logic — Deterministic Logic for Autonomous Enterprise Operators" />
+<meta property="og:description" content="High-speed, verifiable operator pipelines that run critical business execution at zero error tolerance." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='14' fill='%23E2E8F0'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%230066FF' stroke-width='4'/%3E%3C/svg%3E" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Tailwind (Play CDN) -->
+<script src="https://cdn.tailwindcss.com/3.4.5"></script>
+<script>
+  if (window.tailwind) tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          obsidian: '#030712', midnight: '#0A1128', abyss: '#0B0F19',
+          cobalt: '#0066FF', cyan: { glow: '#38BDF8' }, atmos: '#1D4ED8',
+          silver: '#E2E8F0', platinum: '#CBD5E1', chrome: '#94A3B8'
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  };
+</script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@0.453.0/dist/umd/lucide.min.js" defer></script>
+
+<!-- Three.js (ES modules) -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<style>
+  :root {
+    --obsidian: #030712; --midnight: #0A1128; --abyss: #0B0F19;
+    --cobalt: #0066FF; --cyan: #38BDF8; --atmos: #1D4ED8;
+    --silver: #E2E8F0; --platinum: #CBD5E1; --chrome: #94A3B8;
+    --rim: rgba(226, 232, 240, 0.25);
+    --glass: rgba(10, 17, 40, 0.55);
+    color-scheme: dark;
+  }
+  html, body { background: var(--obsidian); color: var(--platinum); }
+  body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  ::selection { background: rgba(0, 102, 255, .45); color: #fff; }
+
+  .font-display { letter-spacing: -0.03em; }
+  .text-chrome-grad {
+    background: linear-gradient(180deg, #ffffff 0%, #E2E8F0 38%, #94A3B8 72%, #CBD5E1 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .text-cobalt-grad {
+    background: linear-gradient(100deg, #38BDF8 0%, #0066FF 55%, #E2E8F0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Ambient page atmosphere */
+  .atmosphere {
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(1200px 700px at 78% -10%, rgba(29, 78, 216, .28), transparent 60%),
+      radial-gradient(900px 600px at -10% 30%, rgba(0, 102, 255, .12), transparent 60%),
+      linear-gradient(180deg, #030712 0%, #0A1128 45%, #0B0F19 100%);
+  }
+  .gridlines {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
+    background-image:
+      linear-gradient(rgba(148,163,184,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 20%, transparent 75%);
+  }
+  .grain {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: .045; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Liquid chrome & frosted glass surface */
+  .glass {
+    position: relative;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.15), 0 30px 80px -40px rgba(0,0,0,.8);
+    border-radius: 1.25rem;
+    isolation: isolate;
+  }
+  .glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(135deg, rgba(226,232,240,.6) 0%, rgba(226,232,240,.14) 35%, rgba(148,163,184,.08) 60%, rgba(0,102,255,.55) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  /* Cursor-follow rim light on cards */
+  .card-glow::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+    transition: opacity .4s ease; z-index: -1;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(56,189,248,.16), rgba(0,102,255,.06) 40%, transparent 70%);
+  }
+  .card-glow:hover::after { opacity: 1; }
+  .card-glow { transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease; }
+  .card-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.2), 0 0 0 1px rgba(56,189,248,.12), 0 30px 90px -30px rgba(0,102,255,.45);
+  }
+
+  /* Buttons */
+  .btn-silver {
+    position: relative; overflow: hidden; color: #030712;
+    background: linear-gradient(180deg, #ffffff 0%, #E2E8F0 40%, #CBD5E1 60%, #94A3B8 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(0,0,0,.25), 0 8px 24px -10px rgba(226,232,240,.5);
+  }
+  .btn-silver::after {
+    content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.95), transparent);
+    transform: skewX(-20deg); transition: left .7s cubic-bezier(.2,.8,.2,1);
+  }
+  .btn-silver:hover::after, .btn-silver:focus-visible::after { left: 120%; }
+
+  .btn-cobalt {
+    position: relative; color: #fff;
+    background: linear-gradient(180deg, #2b7fff 0%, #0066FF 55%, #1D4ED8 100%);
+    border: 1px solid rgba(226,232,240,.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 0 4px rgba(0,102,255,.12), 0 14px 44px -10px rgba(0,102,255,.8), 0 0 60px -10px rgba(56,189,248,.5);
+    transition: box-shadow .4s ease, transform .3s ease;
+  }
+  .btn-cobalt:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 0 0 6px rgba(0,102,255,.16), 0 18px 60px -10px rgba(0,102,255,.95), 0 0 90px -10px rgba(56,189,248,.7); }
+
+  .btn-frost {
+    background: rgba(226,232,240,.06); border: 1px solid rgba(226,232,240,.2);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.12);
+    transition: background .3s ease, border-color .3s ease;
+  }
+  .btn-frost:hover { background: rgba(226,232,240,.11); border-color: rgba(226,232,240,.4); }
+
+  .skip-link { position: fixed; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: 9999px; font-size: 14px; font-weight: 600; color: #030712; background: linear-gradient(180deg,#fff,#CBD5E1); transition: top .2s ease; }
+  .skip-link:focus { top: 16px; }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 10px; }
+
+  /* Status dot */
+  .status-dot { position: relative; width: 8px; height: 8px; border-radius: 9999px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+  .status-dot::after { content: ""; position: absolute; inset: -4px; border-radius: inherit; border: 1px solid var(--cyan); animation: ping 2s cubic-bezier(0,0,.2,1) infinite; }
+  @keyframes ping { 0% { transform: scale(.6); opacity: .9 } 100% { transform: scale(2.2); opacity: 0 } }
+
+  /* Nav */
+  .nav-shell { transition: background .4s ease, box-shadow .4s ease, border-color .4s ease; }
+  .nav-scrolled .nav-shell { background: rgba(3,7,18,.72); border-color: rgba(226,232,240,.12); box-shadow: 0 20px 50px -30px rgba(0,0,0,.9); }
+  .pill-link { position: relative; transition: color .25s ease, background .25s ease; }
+  .pill-link:hover, .pill-link.is-active { color: #fff; background: rgba(226,232,240,.08); }
+
+  /* Hero WebGL stage */
+  .core-stage { pointer-events: none; }
+  .core-stage canvas { pointer-events: auto; display: block; width: 100% !important; height: 100% !important; cursor: grab; touch-action: pan-y; }
+  .core-stage canvas:active { cursor: grabbing; }
+  .core-fallback {
+    position: absolute; inset: 0; border-radius: 50%; margin: auto; width: min(82%, 560px); aspect-ratio: 1;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255,255,255,.95) 0 6%, rgba(226,232,240,.75) 12%, rgba(148,163,184,.35) 28%, transparent 44%),
+      radial-gradient(circle at 60% 65%, rgba(0,102,255,.65), transparent 52%),
+      radial-gradient(circle at 30% 75%, rgba(56,189,248,.45), transparent 48%),
+      radial-gradient(circle at 50% 50%, rgba(29,78,216,.55), transparent 70%);
+    filter: blur(2px);
+    box-shadow: 0 0 120px 10px rgba(0,102,255,.25);
+    transition: opacity .8s ease;
+  }
+  .core-fallback::before, .core-fallback::after {
+    content: ""; position: absolute; inset: -9%; border-radius: 50%; border: 1px solid rgba(226,232,240,.28);
+    transform: rotateX(70deg) rotateZ(20deg);
+  }
+  .core-fallback::after { inset: -16%; border-color: rgba(56,189,248,.25); transform: rotateX(70deg) rotateZ(-35deg) rotateY(25deg); }
+  .webgl-ready .core-fallback { opacity: 0; }
+
+  .hud-label { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .14em; color: var(--chrome); text-transform: uppercase; }
+
+  /* Marquee */
+  .marquee { mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .marquee-track { animation: marquee 38s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* Flow visualization */
+  .flow-edge { stroke-dasharray: 4 6; animation: dash 1.2s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -20; } }
+  .caret::after { content: "▍"; color: var(--cyan); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Simulator */
+  .stage-node { transition: border-color .35s ease, box-shadow .35s ease, background .35s ease, transform .35s ease; }
+  .stage-node[data-state="running"] { border-color: rgba(56,189,248,.8); box-shadow: 0 0 0 1px rgba(56,189,248,.35), 0 0 40px -6px rgba(56,189,248,.55); background: rgba(0,102,255,.12); transform: translateY(-2px); }
+  .stage-node[data-state="done"] { border-color: rgba(226,232,240,.35); background: rgba(226,232,240,.05); }
+  .badge { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .12em; padding: 3px 8px; border-radius: 9999px; border: 1px solid rgba(148,163,184,.3); color: var(--chrome); white-space: nowrap; transition: all .3s ease; }
+  .badge[data-state="running"] { color: #fff; border-color: rgba(56,189,248,.7); background: rgba(56,189,248,.15); box-shadow: 0 0 16px -2px rgba(56,189,248,.6); }
+  .badge[data-state="done"] { color: #030712; border-color: transparent; background: linear-gradient(180deg,#fff,#CBD5E1); }
+  .trigger-btn[aria-pressed="true"] { border-color: rgba(56,189,248,.7); background: rgba(0,102,255,.14); box-shadow: 0 0 0 1px rgba(56,189,248,.25), 0 12px 40px -14px rgba(0,102,255,.8); color: #fff; }
+  .rail-fill { transition: width .45s cubic-bezier(.2,.8,.2,1), height .45s cubic-bezier(.2,.8,.2,1); }
+
+  .log-line { animation: logIn .35s ease both; }
+  @keyframes logIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* Table */
+  .matrix tbody tr { transition: background .25s ease; }
+  .matrix tbody tr:hover { background: rgba(226,232,240,.03); }
+
+  .reveal { opacity: 0; transform: translateY(24px); }
+  .no-js .reveal, .reduced .reveal { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+
+<body class="no-js">
+<script>document.body.classList.remove('no-js'); if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('reduced');</script>
+
+<div class="atmosphere" aria-hidden="true"></div>
+<div class="gridlines" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ============ 1. STICKY GLASS NAVIGATION ============ -->
+<header id="site-nav" class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+  <nav aria-label="Primary" class="nav-shell mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-2xl border border-transparent px-4 py-3 sm:px-5 backdrop-blur-xl">
+    <a href="#top" class="group flex items-center gap-3" aria-label="Operators Logic home">
+      <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#94A3B8"/><stop offset="1" stop-color="#E2E8F0"/></linearGradient></defs>
+        <circle cx="32" cy="32" r="11" fill="url(#lg)"/>
+        <ellipse cx="32" cy="32" rx="27" ry="10" fill="none" stroke="#0066FF" stroke-width="2.5" transform="rotate(-28 32 32)"/>
+        <ellipse cx="32" cy="32" rx="27" ry="10" fill="none" stroke="#CBD5E1" stroke-opacity=".7" stroke-width="1.5" transform="rotate(38 32 32)"/>
+      </svg>
+      <span class="flex flex-col leading-none">
+        <span class="font-display text-[15px] font-bold tracking-[0.14em] text-chrome-grad">OPERATORS LOGIC</span>
+        <span class="mt-1.5 flex items-center gap-2 font-mono text-[9.5px] tracking-[0.18em] text-chrome">
+          <span class="status-dot" aria-hidden="true"></span> SYSTEMS: <span class="text-cyan-glow">NOMINAL</span>
+        </span>
+      </span>
+    </a>
+
+    <ul class="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] p-1 text-[13px] text-platinum/80 lg:flex shadow-[inset_0_1px_1px_rgba(255,255,255,.08)]">
+      <li><a class="pill-link rounded-full px-4 py-2" href="#architecture">Architecture</a></li>
+      <li><a class="pill-link rounded-full px-4 py-2" href="#operators">Operators</a></li>
+      <li><a class="pill-link rounded-full px-4 py-2" href="#benchmarks">Benchmarks</a></li>
+      <li><a class="pill-link rounded-full px-4 py-2" href="#documentation">Documentation</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <a href="#access" class="btn-silver hidden rounded-full px-5 py-2.5 text-[13px] font-semibold sm:inline-flex items-center gap-2">
+        <i data-lucide="terminal-square" class="h-4 w-4" aria-hidden="true"></i> Access Terminal
+      </a>
+      <button id="menu-btn" class="btn-frost inline-flex h-10 w-10 items-center justify-center rounded-full lg:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <i data-lucide="menu" class="h-5 w-5" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="glass mx-auto mt-2 hidden max-w-7xl p-3 lg:hidden">
+    <ul class="grid gap-1 text-sm">
+      <li><a class="block rounded-xl px-4 py-3 hover:bg-white/5" href="#architecture">Architecture</a></li>
+      <li><a class="block rounded-xl px-4 py-3 hover:bg-white/5" href="#operators">Operators</a></li>
+      <li><a class="block rounded-xl px-4 py-3 hover:bg-white/5" href="#benchmarks">Benchmarks</a></li>
+      <li><a class="block rounded-xl px-4 py-3 hover:bg-white/5" href="#documentation">Documentation</a></li>
+      <li><a class="btn-silver mt-1 block rounded-xl px-4 py-3 text-center font-semibold" href="#access">Access Terminal</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ 2. HERO ============ -->
+<section id="top" class="relative min-h-[100svh] overflow-hidden pt-28 lg:pt-24" aria-labelledby="hero-title">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-5 sm:px-8 lg:min-h-[calc(100svh-6rem)] lg:grid-cols-[45fr_55fr] lg:gap-0">
+    <!-- Copy (45%) -->
+    <div class="relative z-10 order-2 pb-12 lg:order-1 lg:pb-0">
+      <p class="hero-in font-mono text-[11px] tracking-[0.22em] text-platinum/80 sm:text-xs">// ENTERPRISE AUTONOMOUS INFRASTRUCTURE</p>
+      <h1 id="hero-title" class="hero-in font-display mt-6 text-[clamp(2.5rem,5.4vw,4.75rem)] font-semibold leading-[0.98] text-chrome-grad">
+        Deterministic Logic for <span class="text-cobalt-grad">Autonomous</span> Enterprise Operators.
+      </h1>
+      <p class="hero-in mt-6 max-w-xl text-base leading-relaxed text-chrome sm:text-lg">
+        Replace unpredictable chat prompts with high-speed, verifiable operator pipelines that run critical business execution at zero error tolerance.
+      </p>
+      <div class="hero-in mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a href="#access" class="btn-cobalt inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-4 text-sm font-semibold">
+          <i data-lucide="cpu" class="h-4 w-4" aria-hidden="true"></i> Deploy Operator Cluster
+        </a>
+        <a href="#architecture" class="btn-frost group inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-4 text-sm font-medium text-silver">
+          Inspect Architecture
+          <span class="font-mono text-cyan-glow transition-transform group-hover:translate-x-1" aria-hidden="true">[-&gt;]</span>
+        </a>
+      </div>
+      <div class="hero-in mt-12 flex items-start gap-4 border-t border-white/10 pt-6">
+        <div class="flex -space-x-2 pt-0.5" aria-hidden="true">
+          <span class="h-7 w-7 rounded-full border border-white/20 bg-gradient-to-br from-silver to-chrome"></span>
+          <span class="h-7 w-7 rounded-full border border-white/20 bg-gradient-to-br from-cobalt to-atmos"></span>
+          <span class="h-7 w-7 rounded-full border border-white/20 bg-gradient-to-br from-cyan-glow to-cobalt"></span>
+        </div>
+        <p class="text-sm leading-relaxed text-chrome">
+          Orchestrating <span class="font-mono font-semibold text-silver">42M+</span> daily deterministic decisions across Fortune 500 infrastructure.
+        </p>
+      </div>
+    </div>
+
+    <!-- WebGL Logic Core (55%) -->
+    <div class="relative order-1 h-[56svh] min-h-[360px] lg:order-2 lg:h-[min(84svh,820px)]">
+      <div id="core-stage" class="core-stage absolute inset-0 lg:-right-16" role="img" aria-label="Interactive 3D Dynamic Logic Core: a chrome sphere enveloped by interlocking silver rings emitting cobalt particle streams. Drag to orbit.">
+        <div class="core-fallback" aria-hidden="true"></div>
+      </div>
+      <!-- HUD -->
+      <div class="pointer-events-none absolute inset-0 hidden sm:block" aria-hidden="true">
+        <div class="absolute left-2 top-8 hud-label">CORE / <span class="text-silver">LGC-01</span><br/><span class="text-cyan-glow">● SYNCED</span></div>
+        <div class="absolute right-2 top-8 text-right hud-label">TILT θx <span id="hud-tx" class="text-silver">0.00°</span><br/>TILT θy <span id="hud-ty" class="text-silver">0.00°</span></div>
+        <div class="absolute bottom-10 left-2 hud-label">THROUGHPUT<br/><span id="hud-tp" class="text-silver">486,112</span> ops/s</div>
+        <div class="absolute bottom-10 right-2 text-right hud-label">DRAG TO ORBIT<br/><span class="text-silver">⟲ DAMPED</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <a href="#telemetry" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-chrome hover:text-silver lg:flex">
+    <i data-lucide="mouse" class="h-4 w-4" aria-hidden="true"></i> SCROLL TO DESCEND
+  </a>
+</section>
+
+<!-- ============ 3. LIVE TELEMETRY STRIP ============ -->
+<section id="telemetry" class="relative px-5 sm:px-8" aria-label="Live system telemetry">
+  <div class="glass reveal mx-auto max-w-7xl overflow-hidden">
+    <div class="flex items-center justify-between border-b border-white/[0.07] px-6 py-3">
+      <span class="flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] text-chrome"><span class="status-dot" aria-hidden="true"></span> LIVE SYSTEM TELEMETRY</span>
+      <span class="font-mono text-[10px] tracking-[0.2em] text-chrome">UTC <span id="utc-clock" class="text-silver">--:--:--</span></span>
+    </div>
+    <dl class="grid grid-cols-2 divide-white/[0.07] lg:grid-cols-4 lg:divide-x">
+      <div class="border-b border-r border-white/[0.07] p-6 sm:p-8 lg:border-0">
+        <dt class="font-mono text-[10px] tracking-[0.2em] text-chrome">EXECUTION</dt>
+        <dd class="font-display mt-3 text-3xl font-semibold text-chrome-grad sm:text-4xl"><span class="counter" data-to="99.999" data-dec="3">99.999</span>%</dd>
+        <dd class="mt-1 text-sm text-platinum/80">Execution Determinism</dd>
+      </div>
+      <div class="border-b border-white/[0.07] p-6 sm:p-8 lg:border-0">
+        <dt class="font-mono text-[10px] tracking-[0.2em] text-chrome">LATENCY · P99</dt>
+        <dd class="font-display mt-3 text-3xl font-semibold text-chrome-grad sm:text-4xl">&lt;<span class="counter" data-to="12" data-dec="0">12</span>ms</dd>
+        <dd class="mt-1 text-sm text-platinum/80">Operator Latency</dd>
+      </div>
+      <div class="border-r border-white/[0.07] p-6 sm:p-8 lg:border-0">
+        <dt class="font-mono text-[10px] tracking-[0.2em] text-chrome">LEDGER</dt>
+        <dd class="font-display mt-3 text-3xl font-semibold text-chrome-grad sm:text-4xl"><span class="counter" data-to="100" data-dec="0">100</span>%</dd>
+        <dd class="mt-1 text-sm text-platinum/80">Audit Traceability</dd>
+      </div>
+      <div class="p-6 sm:p-8">
+        <dt class="font-mono text-[10px] tracking-[0.2em] text-chrome">COMPLIANCE</dt>
+        <dd class="font-display mt-3 flex items-center gap-2 text-2xl font-semibold text-chrome-grad sm:text-[1.7rem]"><i data-lucide="shield-check" class="h-6 w-6 text-cyan-glow" aria-hidden="true"></i> SOC2 Type II</dd>
+        <dd class="mt-1 text-sm text-platinum/80">&amp; FedRAMP Certified</dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- Trust marquee -->
+  <div class="marquee mx-auto mt-10 max-w-7xl overflow-hidden" aria-hidden="true">
+    <div class="marquee-track flex w-max gap-14 font-mono text-[11px] tracking-[0.25em] text-chrome/70">
+      <span>GLOBAL TIER-1 BANK</span><span>◆</span><span>AEROSPACE PRIME</span><span>◆</span><span>NATIONAL GRID OPERATOR</span><span>◆</span><span>FORTUNE 50 LOGISTICS</span><span>◆</span><span>SOVEREIGN HEALTH NETWORK</span><span>◆</span><span>REINSURANCE GROUP</span><span>◆</span>
+      <span>GLOBAL TIER-1 BANK</span><span>◆</span><span>AEROSPACE PRIME</span><span>◆</span><span>NATIONAL GRID OPERATOR</span><span>◆</span><span>FORTUNE 50 LOGISTICS</span><span>◆</span><span>SOVEREIGN HEALTH NETWORK</span><span>◆</span><span>REINSURANCE GROUP</span><span>◆</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. OPERATOR ENGINE BENTO ============ -->
+<section id="architecture" class="relative px-5 pt-32 sm:px-8" aria-labelledby="engine-title">
+  <div class="mx-auto max-w-7xl">
+    <div class="reveal flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <div>
+        <p class="font-mono text-xs tracking-[0.22em] text-cyan-glow">// 01 — THE OPERATOR ENGINE</p>
+        <h2 id="engine-title" class="font-display mt-4 max-w-3xl text-4xl font-semibold leading-[1.02] text-chrome-grad sm:text-5xl lg:text-6xl">Precision machinery for autonomous execution.</h2>
+      </div>
+      <p class="max-w-md text-chrome">Four interlocking subsystems compile intent into verifiable logic graphs, then execute them with the repeatability of firmware — not the variance of a chatbot.</p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-1 gap-5 md:grid-cols-6 md:grid-rows-[auto_auto]">
+      <!-- Card A (Large) -->
+      <article class="glass card-glow reveal overflow-hidden p-6 sm:p-8 md:col-span-4 md:row-span-2">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <span class="font-mono text-[10px] tracking-[0.2em] text-chrome">MODULE A · SYNTHESIS</span>
+            <h3 class="font-display mt-3 text-2xl font-semibold text-silver sm:text-3xl">Autonomous Workflow Synthesis</h3>
+            <p class="mt-2 max-w-lg text-sm leading-relaxed text-chrome">Declare an outcome. The compiler synthesizes a typed, acyclic logic graph — every branch bounded, every side-effect declared before a single instruction runs.</p>
+          </div>
+          <span class="hidden rounded-full border border-cyan-glow/40 bg-cyan-glow/10 px-3 py-1 font-mono text-[10px] tracking-[0.15em] text-cyan-glow sm:inline-flex">LIVE</span>
+        </div>
+
+        <div class="mt-7 grid gap-4 lg:grid-cols-[1.05fr_1fr]">
+          <!-- Code panel -->
+          <div class="rounded-xl border border-white/10 bg-obsidian/70 shadow-[inset_0_1px_1px_rgba(255,255,255,.06)]">
+            <div class="flex items-center gap-2 border-b border-white/[0.07] px-4 py-2.5">
+              <span class="h-2.5 w-2.5 rounded-full bg-white/15"></span><span class="h-2.5 w-2.5 rounded-full bg-white/15"></span><span class="h-2.5 w-2.5 rounded-full bg-white/15"></span>
+              <span class="ml-2 font-mono text-[10px] tracking-[0.12em] text-chrome">operator/reconcile.ol</span>
+            </div>
+            <pre class="h-[244px] overflow-hidden px-4 py-3 font-mono text-[11.5px] leading-[1.7] text-platinum/90" aria-label="Operator logic source code simulation"><code id="code-typer"></code></pre>
+          </div>
+          <!-- Flow graph -->
+          <div class="relative rounded-xl border border-white/10 bg-obsidian/50 p-2">
+            <svg viewBox="0 0 320 268" class="h-full w-full" role="img" aria-label="Logic graph: Trigger to Classify, branching to Verify and Enrich, merging into Gate, then Execute">
+              <defs>
+                <linearGradient id="edge" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="320" y2="268"><stop offset="0" stop-color="#94A3B8"/><stop offset="1" stop-color="#38BDF8"/></linearGradient>
+                <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <g fill="none" stroke="url(#edge)" stroke-width="1.4">
+                <path class="flow-edge" d="M160 38 V 78"/>
+                <path class="flow-edge" d="M160 104 C 160 124, 82 120, 82 142"/>
+                <path class="flow-edge" d="M160 104 C 160 124, 238 120, 238 142"/>
+                <path class="flow-edge" d="M82 168 C 82 190, 160 184, 160 204"/>
+                <path class="flow-edge" d="M238 168 C 238 190, 160 184, 160 204"/>
+                <path class="flow-edge" d="M160 230 V 246"/>
+              </g>
+              <g font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1" text-anchor="middle">
+                <g class="flow-node" data-i="0"><rect x="110" y="12" width="100" height="26" rx="13" fill="#0A1128" stroke="#CBD5E1" stroke-opacity=".5"/><text x="160" y="29" fill="#E2E8F0">TRIGGER</text></g>
+                <g class="flow-node" data-i="1"><rect x="110" y="78" width="100" height="26" rx="13" fill="#0A1128" stroke="#CBD5E1" stroke-opacity=".5"/><text x="160" y="95" fill="#E2E8F0">CLASSIFY</text></g>
+                <g class="flow-node" data-i="2"><rect x="32" y="142" width="100" height="26" rx="13" fill="#0A1128" stroke="#CBD5E1" stroke-opacity=".5"/><text x="82" y="159" fill="#E2E8F0">VERIFY</text></g>
+                <g class="flow-node" data-i="3"><rect x="188" y="142" width="100" height="26" rx="13" fill="#0A1128" stroke="#CBD5E1" stroke-opacity=".5"/><text x="238" y="159" fill="#E2E8F0">ENRICH</text></g>
+                <g class="flow-node" data-i="4"><rect x="110" y="204" width="100" height="26" rx="13" fill="#0A1128" stroke="#CBD5E1" stroke-opacity=".5"/><text x="160" y="221" fill="#E2E8F0">GATE ✓</text></g>
+              </g>
+              <circle cx="160" cy="254" r="7" fill="#0066FF" filter="url(#glow)"/>
+              <circle cx="160" cy="254" r="3" fill="#fff"/>
+              <circle r="3.2" fill="#38BDF8" filter="url(#glow)"><animateMotion dur="3.2s" repeatCount="indefinite" path="M160 25 V 91 C 160 124, 82 120, 82 155 C 82 190, 160 184, 160 217 V 254"/></circle>
+              <circle r="3.2" fill="#E2E8F0" filter="url(#glow)"><animateMotion dur="3.2s" begin="1.6s" repeatCount="indefinite" path="M160 25 V 91 C 160 124, 238 120, 238 155 C 238 190, 160 184, 160 217 V 254"/></circle>
+            </svg>
+          </div>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[10.5px] tracking-[0.12em] text-chrome">
+          <span>NODES <span class="text-silver">5</span></span><span>BRANCH BOUND <span class="text-silver">2</span></span><span>SIDE-EFFECTS <span class="text-silver">DECLARED</span></span><span>COMPILE <span id="compile-ms" class="text-cyan-glow">3.41ms</span></span>
+        </div>
+      </article>
+
+      <!-- Card B -->
+      <article class="glass card-glow reveal p-6 sm:p-7 md:col-span-2">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]"><i data-lucide="database-zap" class="h-5 w-5 text-cyan-glow" aria-hidden="true"></i></span>
+          <span class="font-mono text-[10px] tracking-[0.2em] text-chrome">MODULE B</span>
+        </div>
+        <h3 class="font-display mt-5 text-xl font-semibold text-silver">Sub-Second State Memory</h3>
+        <p class="mt-2 text-sm leading-relaxed text-chrome">Distributed, low-latency context sync. Every operator reads one consistent world-state, replicated across regions.</p>
+        <ul class="mt-5 space-y-2.5 font-mono text-[11px]" aria-label="Region sync latency">
+          <li class="flex items-center justify-between"><span class="text-platinum/80">us-east-1</span><span class="flex items-center gap-2"><span class="h-1 w-16 overflow-hidden rounded bg-white/10"><span class="sync-bar block h-full rounded bg-gradient-to-r from-cobalt to-cyan-glow" style="width:40%"></span></span><span class="sync-ms w-12 text-right text-silver">0.8ms</span></span></li>
+          <li class="flex items-center justify-between"><span class="text-platinum/80">eu-west-2</span><span class="flex items-center gap-2"><span class="h-1 w-16 overflow-hidden rounded bg-white/10"><span class="sync-bar block h-full rounded bg-gradient-to-r from-cobalt to-cyan-glow" style="width:55%"></span></span><span class="sync-ms w-12 text-right text-silver">1.4ms</span></span></li>
+          <li class="flex items-center justify-between"><span class="text-platinum/80">ap-south-1</span><span class="flex items-center gap-2"><span class="h-1 w-16 overflow-hidden rounded bg-white/10"><span class="sync-bar block h-full rounded bg-gradient-to-r from-cobalt to-cyan-glow" style="width:70%"></span></span><span class="sync-ms w-12 text-right text-silver">2.1ms</span></span></li>
+        </ul>
+      </article>
+
+      <!-- Card C -->
+      <article class="glass card-glow reveal p-6 sm:p-7 md:col-span-2">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]"><i data-lucide="shield-half" class="h-5 w-5 text-cyan-glow" aria-hidden="true"></i></span>
+          <span class="font-mono text-[10px] tracking-[0.2em] text-chrome">MODULE C</span>
+        </div>
+        <h3 class="font-display mt-5 text-xl font-semibold text-silver">Deterministic Safety Gates</h3>
+        <p class="mt-2 text-sm leading-relaxed text-chrome">Real-time verification filters intercept hallucinated outputs before they touch a production system.</p>
+        <ul id="gate-feed" class="mt-5 h-[92px] space-y-1.5 overflow-hidden font-mono text-[10.5px]" aria-label="Safety gate verification feed"></ul>
+      </article>
+    </div>
+
+    <!-- Card D (full-width row) -->
+    <article class="glass card-glow reveal mt-5 grid gap-8 p-6 sm:p-8 md:grid-cols-[1fr_1.3fr] md:items-center">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]"><i data-lucide="git-merge" class="h-5 w-5 text-cyan-glow" aria-hidden="true"></i></span>
+          <span class="font-mono text-[10px] tracking-[0.2em] text-chrome">MODULE D · CONSENSUS</span>
+        </div>
+        <h3 class="font-display mt-5 text-2xl font-semibold text-silver sm:text-3xl">Multi-Model Consensus</h3>
+        <p class="mt-2 max-w-md text-sm leading-relaxed text-chrome">Parallel routing across top reasoning engines. Decisions commit only when independent models converge above a quorum threshold — disagreements escalate, never guess.</p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-obsidian/50 p-5">
+        <div class="space-y-4" id="consensus">
+          <div><div class="mb-1.5 flex justify-between font-mono text-[10.5px] tracking-[0.1em]"><span class="text-platinum/80">ENGINE α · REASONING</span><span class="c-val text-silver">0.00</span></div><div class="h-1.5 rounded bg-white/[0.06]"><div class="c-bar h-full rounded bg-gradient-to-r from-chrome to-silver" style="width:0%"></div></div></div>
+          <div><div class="mb-1.5 flex justify-between font-mono text-[10.5px] tracking-[0.1em]"><span class="text-platinum/80">ENGINE β · ANALYTIC</span><span class="c-val text-silver">0.00</span></div><div class="h-1.5 rounded bg-white/[0.06]"><div class="c-bar h-full rounded bg-gradient-to-r from-atmos to-cobalt" style="width:0%"></div></div></div>
+          <div><div class="mb-1.5 flex justify-between font-mono text-[10.5px] tracking-[0.1em]"><span class="text-platinum/80">ENGINE γ · VERIFIER</span><span class="c-val text-silver">0.00</span></div><div class="h-1.5 rounded bg-white/[0.06]"><div class="c-bar h-full rounded bg-gradient-to-r from-cobalt to-cyan-glow" style="width:0%"></div></div></div>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-white/[0.07] pt-4 font-mono text-[10.5px] tracking-[0.12em]">
+          <span class="text-chrome">QUORUM ≥ 0.92</span>
+          <span id="consensus-state" class="rounded-full border border-white/15 px-3 py-1 text-chrome">ROUTING…</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 5. INTERACTIVE OPERATOR SIMULATOR ============ -->
+<section id="operators" class="relative px-5 pt-32 sm:px-8" aria-labelledby="sim-title">
+  <div class="mx-auto max-w-7xl">
+    <div class="reveal max-w-3xl">
+      <p class="font-mono text-xs tracking-[0.22em] text-cyan-glow">// 02 — OPERATOR SIMULATOR</p>
+      <h2 id="sim-title" class="font-display mt-4 text-4xl font-semibold leading-[1.02] text-chrome-grad sm:text-5xl lg:text-6xl">Watch a logic graph execute.</h2>
+      <p class="mt-5 text-chrome">Select an enterprise trigger. The operator cluster ingests, verifies, reaches consensus, executes and seals the audit record — identically, every time.</p>
+    </div>
+
+    <div class="glass reveal mt-12 overflow-hidden">
+      <div class="grid lg:grid-cols-[300px_1fr]">
+        <!-- Trigger selection -->
+        <div class="border-b border-white/[0.07] p-5 sm:p-6 lg:border-b-0 lg:border-r">
+          <p class="font-mono text-[10px] tracking-[0.2em] text-chrome">SELECT TRIGGER</p>
+          <div class="mt-4 grid gap-2.5 sm:grid-cols-3 lg:grid-cols-1" role="group" aria-label="Enterprise triggers">
+            <button class="trigger-btn btn-frost flex items-start gap-3 rounded-xl p-4 text-left text-platinum" data-trigger="finance" aria-pressed="false">
+              <i data-lucide="landmark" class="mt-0.5 h-5 w-5 shrink-0 text-cyan-glow" aria-hidden="true"></i>
+              <span><span class="block text-sm font-medium">Financial Anomaly Detected</span><span class="mt-1 block font-mono text-[10px] tracking-[0.1em] text-chrome">LEDGER-STREAM · EU-W</span></span>
+            </button>
+            <button class="trigger-btn btn-frost flex items-start gap-3 rounded-xl p-4 text-left text-platinum" data-trigger="supply" aria-pressed="false">
+              <i data-lucide="container" class="mt-0.5 h-5 w-5 shrink-0 text-cyan-glow" aria-hidden="true"></i>
+              <span><span class="block text-sm font-medium">Supply Chain Disruption</span><span class="mt-1 block font-mono text-[10px] tracking-[0.1em] text-chrome">LOGISTICS-MESH · APAC</span></span>
+            </button>
+            <button class="trigger-btn btn-frost flex items-start gap-3 rounded-xl p-4 text-left text-platinum" data-trigger="security" aria-pressed="false">
+              <i data-lucide="key-round" class="mt-0.5 h-5 w-5 shrink-0 text-cyan-glow" aria-hidden="true"></i>
+              <span><span class="block text-sm font-medium">Credential Compromise Alert</span><span class="mt-1 block font-mono text-[10px] tracking-[0.1em] text-chrome">IAM-SENTINEL · US-E</span></span>
+            </button>
+          </div>
+          <button id="replay-btn" class="btn-silver mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40" disabled>
+            <i data-lucide="rotate-ccw" class="h-4 w-4" aria-hidden="true"></i> Replay Deterministically
+          </button>
+          <p class="mt-3 font-mono text-[10px] leading-relaxed tracking-[0.06em] text-chrome/80">Visualized at 1/120 real-time. Replays produce an identical ledger hash.</p>
+        </div>
+
+        <!-- Graph + log -->
+        <div class="p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="font-mono text-[10px] tracking-[0.2em] text-chrome">LOGIC GRAPH · <span id="sim-name" class="text-silver">AWAITING TRIGGER</span></p>
+            <div class="flex gap-4 font-mono text-[10px] tracking-[0.14em] text-chrome">
+              <span>LATENCY <span id="sim-lat" class="text-silver">—</span></span>
+              <span>HASH <span id="sim-hash" class="text-cyan-glow">—</span></span>
+            </div>
+          </div>
+
+          <!-- Stages -->
+          <div class="relative mt-6">
+            <div class="absolute left-[29px] top-6 bottom-6 w-px bg-white/10 md:hidden" aria-hidden="true">
+              <div id="rail-fill" class="rail-fill absolute left-0 top-0 w-px bg-gradient-to-b from-cobalt to-cyan-glow" style="height:0%"></div>
+            </div>
+            <ol id="stages" class="relative grid gap-3 md:grid-cols-6 md:gap-2"></ol>
+            <div class="mt-3 hidden h-[3px] overflow-hidden rounded-full bg-white/[0.07] md:block" role="progressbar" aria-label="Pipeline progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="rail-bar">
+              <div id="rail-fill-x" class="rail-fill h-full rounded-full bg-gradient-to-r from-cobalt to-cyan-glow shadow-[0_0_12px_rgba(56,189,248,.8)]" style="width:0%"></div>
+            </div>
+          </div>
+
+          <!-- Detail + console -->
+          <div class="mt-6 grid gap-4 xl:grid-cols-[1fr_1.15fr]">
+            <div class="rounded-xl border border-white/10 bg-obsidian/50 p-5">
+              <p class="font-mono text-[10px] tracking-[0.2em] text-chrome">ACTIVE STAGE</p>
+              <p id="stage-title" class="font-display mt-2 text-xl font-semibold text-silver">Standby</p>
+              <p id="stage-detail" class="mt-2 min-h-[3rem] text-sm leading-relaxed text-chrome">Select a trigger to dispatch an operator. The graph compiles in under 4ms and runs with bounded, declared side-effects.</p>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-obsidian/80">
+              <div class="flex items-center justify-between border-b border-white/[0.07] px-4 py-2.5">
+                <span class="font-mono text-[10px] tracking-[0.15em] text-chrome">EXECUTION LOG</span>
+                <span id="sim-status" class="badge">IDLE</span>
+              </div>
+              <ol id="sim-log" class="h-[168px] space-y-1 overflow-y-auto px-4 py-3 font-mono text-[11px] leading-relaxed text-platinum/85" aria-live="polite" aria-label="Execution log">
+                <li class="text-chrome/70">$ operator-cluster --listen</li>
+                <li class="text-chrome/70">› awaiting enterprise trigger…</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. COMPARISON MATRIX ============ -->
+<section id="benchmarks" class="relative px-5 pt-32 sm:px-8" aria-labelledby="matrix-title">
+  <div class="mx-auto max-w-7xl">
+    <div class="reveal flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <div>
+        <p class="font-mono text-xs tracking-[0.22em] text-cyan-glow">// 03 — BENCHMARKS</p>
+        <h2 id="matrix-title" class="font-display mt-4 max-w-3xl text-4xl font-semibold leading-[1.02] text-chrome-grad sm:text-5xl lg:text-6xl">Probability is not a strategy.</h2>
+      </div>
+      <p class="max-w-md text-chrome">Measured on a 30-day production replay of 1.2B enterprise events. Same inputs, same hardware envelope.</p>
+    </div>
+
+    <div class="glass reveal mt-12 overflow-x-auto">
+      <table class="matrix w-full min-w-[680px] text-left">
+        <caption class="sr-only">Comparison of probabilistic LLM wrappers against the Operators Logic engine</caption>
+        <thead>
+          <tr class="border-b border-white/[0.08]">
+            <th scope="col" class="w-[24%] px-6 py-5 font-mono text-[10px] font-medium tracking-[0.2em] text-chrome">DIMENSION</th>
+            <th scope="col" class="w-[36%] px-6 py-5 font-mono text-[10px] font-medium tracking-[0.2em] text-chrome">PROBABILISTIC LLM WRAPPERS</th>
+            <th scope="col" class="w-[40%] bg-cobalt/[0.07] px-6 py-5 font-mono text-[10px] font-medium tracking-[0.2em] text-cyan-glow">OPERATORS LOGIC ENGINE</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm">
+          <tr class="border-b border-white/[0.06]">
+            <th scope="row" class="px-6 py-6 font-display text-base font-medium text-silver"><span class="flex items-center gap-3"><i data-lucide="gauge" class="h-4 w-4 text-chrome" aria-hidden="true"></i>Latency</span></th>
+            <td class="px-6 py-6 text-chrome"><span class="flex items-start gap-2"><i data-lucide="x" class="mt-0.5 h-4 w-4 shrink-0 text-chrome/60" aria-hidden="true"></i>800ms – 4.2s, variable with token length and provider load</span></td>
+            <td class="bg-cobalt/[0.05] px-6 py-6 text-platinum"><span class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-cyan-glow" aria-hidden="true"></i><span><span class="font-mono font-semibold text-silver">&lt;12ms</span> p99, fixed compute envelope per operator</span></span></td>
+          </tr>
+          <tr class="border-b border-white/[0.06]">
+            <th scope="row" class="px-6 py-6 font-display text-base font-medium text-silver"><span class="flex items-center gap-3"><i data-lucide="fingerprint" class="h-4 w-4 text-chrome" aria-hidden="true"></i>Consistency</span></th>
+            <td class="px-6 py-6 text-chrome"><span class="flex items-start gap-2"><i data-lucide="x" class="mt-0.5 h-4 w-4 shrink-0 text-chrome/60" aria-hidden="true"></i>Non-deterministic; identical prompts drift with temperature and model updates</span></td>
+            <td class="bg-cobalt/[0.05] px-6 py-6 text-platinum"><span class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-cyan-glow" aria-hidden="true"></i><span><span class="font-mono font-semibold text-silver">99.999%</span> bit-identical replay; versioned, pinned logic graphs</span></span></td>
+          </tr>
+          <tr class="border-b border-white/[0.06]">
+            <th scope="row" class="px-6 py-6 font-display text-base font-medium text-silver"><span class="flex items-center gap-3"><i data-lucide="life-buoy" class="h-4 w-4 text-chrome" aria-hidden="true"></i>Failure Recovery</span></th>
+            <td class="px-6 py-6 text-chrome"><span class="flex items-start gap-2"><i data-lucide="x" class="mt-0.5 h-4 w-4 shrink-0 text-chrome/60" aria-hidden="true"></i>Silent failures, manual retries, partial side-effects left in place</span></td>
+            <td class="bg-cobalt/[0.05] px-6 py-6 text-platinum"><span class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-cyan-glow" aria-hidden="true"></i>Checkpointed transactions with automatic rollback and state replay</span></td>
+          </tr>
+          <tr class="border-b border-white/[0.06]">
+            <th scope="row" class="px-6 py-6 font-display text-base font-medium text-silver"><span class="flex items-center gap-3"><i data-lucide="scroll-text" class="h-4 w-4 text-chrome" aria-hidden="true"></i>Auditability</span></th>
+            <td class="px-6 py-6 text-chrome"><span class="flex items-start gap-2"><i data-lucide="x" class="mt-0.5 h-4 w-4 shrink-0 text-chrome/60" aria-hidden="true"></i>Prompt/response logs only; reasoning cannot be reconstructed</span></td>
+            <td class="bg-cobalt/[0.05] px-6 py-6 text-platinum"><span class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-cyan-glow" aria-hidden="true"></i>Hash-chained execution ledger; every decision traceable to inputs</span></td>
+          </tr>
+          <tr>
+            <th scope="row" class="px-6 py-6 font-display text-base font-medium text-silver"><span class="flex items-center gap-3"><i data-lucide="coins" class="h-4 w-4 text-chrome" aria-hidden="true"></i>Total Cost of Ownership</span></th>
+            <td class="px-6 py-6 text-chrome"><span class="flex items-start gap-2"><i data-lucide="x" class="mt-0.5 h-4 w-4 shrink-0 text-chrome/60" aria-hidden="true"></i>Unbounded token spend plus human review overhead on every output</span></td>
+            <td class="bg-cobalt/[0.05] px-6 py-6 text-platinum"><span class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 shrink-0 text-cyan-glow" aria-hidden="true"></i><span><span class="font-mono font-semibold text-silver">−63%</span> at scale; models invoked only where logic cannot decide</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. FINAL CTA ============ -->
+<section id="access" class="relative mt-36 overflow-hidden px-5 py-28 sm:px-8 sm:py-36" aria-labelledby="cta-title">
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true" style="background: radial-gradient(60% 80% at 50% 100%, rgba(0,102,255,.55), rgba(29,78,216,.25) 40%, transparent 75%), radial-gradient(40% 50% at 50% 110%, rgba(56,189,248,.45), transparent 70%);"></div>
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-silver/40 to-transparent" aria-hidden="true"></div>
+  <div class="reveal relative mx-auto max-w-4xl text-center">
+    <p class="font-mono text-xs tracking-[0.22em] text-cyan-glow">// FLEET COMMAND</p>
+    <h2 id="cta-title" class="font-display mt-5 text-[clamp(2.75rem,7vw,6rem)] font-semibold leading-[0.95] text-chrome-grad">Command Your Autonomous Fleet.</h2>
+    <p class="mx-auto mt-6 max-w-xl text-chrome sm:text-lg">Request terminal access. A solutions architect will provision a sandboxed operator cluster against your own event streams within 48 hours.</p>
+
+    <form id="dispatch-form" class="glass mx-auto mt-10 flex max-w-xl flex-col gap-2 rounded-2xl p-2 sm:flex-row sm:rounded-full" novalidate>
+      <label for="email" class="sr-only">Work email</label>
+      <div class="flex flex-1 items-center gap-3 px-4">
+        <i data-lucide="at-sign" class="h-4 w-4 shrink-0 text-chrome" aria-hidden="true"></i>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="operator@enterprise.com" class="w-full bg-transparent py-3 font-mono text-sm text-silver placeholder:text-chrome/60 focus:outline-none" aria-describedby="form-msg" />
+      </div>
+      <button type="submit" class="btn-cobalt inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold sm:rounded-full">
+        <i data-lucide="send" class="h-4 w-4" aria-hidden="true"></i> Dispatch Request
+      </button>
+    </form>
+    <p id="form-msg" class="mt-4 min-h-[1.25rem] font-mono text-xs tracking-[0.08em] text-chrome" role="status"></p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="documentation" class="relative border-t border-white/[0.08] bg-obsidian/80 px-5 pb-10 pt-16 sm:px-8">
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <p class="font-display text-lg font-bold tracking-[0.14em] text-chrome-grad">OPERATORS LOGIC</p>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-chrome">Deterministic logic infrastructure for autonomous enterprise operators.</p>
+      <p class="mt-6 flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] text-chrome"><span class="status-dot" aria-hidden="true"></span> ALL SYSTEMS NOMINAL</p>
+    </div>
+    <nav aria-label="Documentation">
+      <p class="font-mono text-[10px] tracking-[0.2em] text-silver">DOCUMENTATION</p>
+      <ul class="mt-4 space-y-2.5 text-sm text-chrome">
+        <li><a class="hover:text-silver" href="#architecture">Architecture Overview</a></li>
+        <li><a class="hover:text-silver" href="#operators">Operator SDK Reference</a></li>
+        <li><a class="hover:text-silver" href="#operators">Logic Graph Specification</a></li>
+        <li><a class="hover:text-silver" href="#benchmarks">Benchmark Methodology</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Platform">
+      <p class="font-mono text-[10px] tracking-[0.2em] text-silver">PLATFORM</p>
+      <ul class="mt-4 space-y-2.5 text-sm text-chrome">
+        <li><a class="hover:text-silver" href="#architecture">Workflow Synthesis</a></li>
+        <li><a class="hover:text-silver" href="#architecture">Safety Gates</a></li>
+        <li><a class="hover:text-silver" href="#architecture">Consensus Routing</a></li>
+        <li><a class="hover:text-silver" href="#telemetry">System Status</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Trust">
+      <p class="font-mono text-[10px] tracking-[0.2em] text-silver">TRUST CENTER</p>
+      <ul class="mt-4 space-y-2.5 text-sm text-chrome">
+        <li><a class="hover:text-silver" href="#documentation">Security Whitepaper</a></li>
+        <li><a class="hover:text-silver" href="#documentation">SOC2 Type II Report</a></li>
+        <li><a class="hover:text-silver" href="#documentation">FedRAMP Package</a></li>
+        <li><a class="hover:text-silver" href="#documentation">Responsible Disclosure</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="mx-auto mt-14 max-w-7xl border-t border-white/[0.06] pt-6">
+    <p class="text-[11px] leading-relaxed text-chrome/70">Performance figures reflect internal benchmarks on production-replay workloads and may vary with deployment topology, data volume and integration configuration. Certification scope is defined in the applicable audit reports, available under NDA. Operators Logic does not make autonomous decisions outside the policy boundaries configured by the customer.</p>
+    <div class="mt-5 flex flex-col justify-between gap-3 font-mono text-[10px] tracking-[0.14em] text-chrome/80 sm:flex-row">
+      <span>© <span id="year">2026</span> OPERATORS LOGIC. ALL RIGHTS RESERVED.</span>
+      <span class="flex gap-5"><a class="hover:text-silver" href="#documentation">PRIVACY</a><a class="hover:text-silver" href="#documentation">TERMS</a><a class="hover:text-silver" href="#documentation">DPA</a><a class="hover:text-silver" href="#documentation">COOKIES</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ UI / INTERACTION SCRIPT ============ -->
+<script>
+(() => {
+  'use strict';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  // Pauses an interval-driven widget while it is off-screen.
+  function whenVisible(el, start, stop) {
+    if (!('IntersectionObserver' in window)) { start(); return; }
+    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.05 }).observe(el);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    $('#year').textContent = new Date().getFullYear();
+    if (window.lucide) lucide.createIcons();
+
+    /* ---- Nav ---- */
+    const nav = $('#site-nav');
+    const onScroll = () => nav.classList.toggle('nav-scrolled', scrollY > 24);
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    const menuBtn = $('#menu-btn'), menu = $('#mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      const open = menu.classList.toggle('hidden') === false;
+      menuBtn.setAttribute('aria-expanded', open);
+      menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
+    $$('a', menu).forEach(a => a.addEventListener('click', () => { menu.classList.add('hidden'); menuBtn.setAttribute('aria-expanded', 'false'); }));
+
+    // Active pill link
+    const pills = $$('.pill-link');
+    const sections = pills.map(p => $(p.getAttribute('href'))).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) pills.forEach(p => p.classList.toggle('is-active', p.getAttribute('href') === '#' + e.target.id));
+      }), { rootMargin: '-45% 0px -50% 0px' });
+      sections.forEach(s => io.observe(s));
+    }
+
+    /* ---- UTC clock ---- */
+    const clock = $('#utc-clock');
+    const tick = () => clock.textContent = new Date().toISOString().slice(11, 19);
+    tick(); setInterval(tick, 1000);
+
+    /* ---- Card cursor rim-light ---- */
+    $$('.card-glow').forEach(c => c.addEventListener('pointermove', e => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }));
+
+    /* ---- GSAP reveals + counters ---- */
+    if (window.gsap && window.ScrollTrigger && !reduced) {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.from('.hero-in', { y: 28, opacity: 0, duration: 1.1, stagger: 0.09, ease: 'power3.out', delay: 0.15 });
+      $$('.reveal').forEach(el => gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
+      $$('.counter').forEach(el => {
+        const to = parseFloat(el.dataset.to), dec = +el.dataset.dec, o = { v: 0 };
+        gsap.to(o, { v: to, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true }, onUpdate: () => el.textContent = o.v.toFixed(dec) });
+      });
+    } else {
+      $$('.reveal').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+    }
+
+    /* ---- Card A: code typer + compile timer ---- */
+    const codeLines = [
+      ['k', 'operator'], [' ', ' '], ['f', 'ReconcileLedger'], [' ', ' {'], ['\n'],
+      [' ', '  '], ['k', 'trigger'], [' ', ' '], ['s', 'ledger.variance > 0.02'], ['\n'],
+      [' ', '  '], ['k', 'state'], [' ', '   '], ['f', 'memory.hydrate'], [' ', '(account, '], ['n', '90d'], [' ', ')'], ['\n'],
+      [' ', '  '], ['k', 'gate'], [' ', '    '], ['f', 'policy'], [' ', '('], ['s', '"SOX-404"'], [' ', ', '], ['s', '"AML-7"'], [' ', ')'], ['\n'],
+      [' ', '  '], ['k', 'decide'], [' ', '  '], ['f', 'consensus'], [' ', '(α, β, γ, quorum: '], ['n', '0.92'], [' ', ')'], ['\n'],
+      [' ', '  '], ['k', 'execute'], [' ', ' '], ['f', 'treasury.hold'], [' ', '() '], ['c', '// idempotent'], ['\n'],
+      [' ', '  '], ['k', 'on_fail'], [' ', ' '], ['f', 'rollback'], [' ', '(checkpoint)'], ['\n'],
+      [' ', '  '], ['k', 'audit'], [' ', '   '], ['f', 'ledger.seal'], [' ', '(sha256)'], ['\n'],
+      [' ', '}'], ['\n'], ['\n'], ['c', '✓ compiled · 5 nodes · 0 unbounded paths']
+    ];
+    const colors = { k: '#38BDF8', f: '#E2E8F0', s: '#93C5FD', n: '#60A5FA', c: '#64748B', ' ': '#94A3B8' };
+    const codeEl = $('#code-typer');
+    const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const renderUpTo = (chars) => {
+      let out = '', left = chars;
+      for (const [t, txt] of codeLines) {
+        if (left <= 0) break;
+        if (t === '\n') { out += '\n'; left--; continue; }
+        const part = txt.slice(0, left); left -= part.length;
+        out += `<span style="color:${colors[t]}">${esc(part)}</span>`;
+      }
+      return out;
+    };
+    const totalChars = codeLines.reduce((n, [t, x]) => n + (t === '\n' ? 1 : x.length), 0);
+    if (reduced) { codeEl.innerHTML = renderUpTo(totalChars); }
+    else {
+      let pos = 0, hold = 0, timer = null;
+      const step = () => {
+        if (pos < totalChars) { pos += 2; codeEl.innerHTML = renderUpTo(pos) + '<span class="caret"></span>'; }
+        else if (++hold > 70) { pos = 0; hold = 0; $('#compile-ms').textContent = (3 + Math.random() * 0.8).toFixed(2) + 'ms'; }
+      };
+      whenVisible(codeEl, () => { if (!timer) timer = setInterval(step, 28); }, () => { clearInterval(timer); timer = null; });
+    }
+
+    // Pulse flow nodes in order
+    const flowNodes = $$('.flow-node rect');
+    if (!reduced) {
+      let fi = 0, ft = null;
+      const pulse = () => {
+        flowNodes.forEach((r, i) => { r.setAttribute('stroke', i === fi ? '#38BDF8' : '#CBD5E1'); r.setAttribute('stroke-opacity', i === fi ? '1' : '.5'); });
+        fi = (fi + 1) % flowNodes.length;
+      };
+      whenVisible(codeEl, () => { if (!ft) ft = setInterval(pulse, 640); }, () => { clearInterval(ft); ft = null; });
+    }
+
+    /* ---- Card B: region sync jitter ---- */
+    const syncMs = $$('.sync-ms'), syncBars = $$('.sync-bar'), base = [0.8, 1.4, 2.1];
+    if (!reduced) {
+      let st = null;
+      whenVisible(syncMs[0], () => { if (!st) st = setInterval(() => {
+        syncMs.forEach((el, i) => { const v = base[i] + (Math.random() - 0.5) * 0.4; el.textContent = v.toFixed(1) + 'ms'; syncBars[i].style.width = Math.min(95, v / 2.6 * 100) + '%'; });
+      }, 900); }, () => { clearInterval(st); st = null; });
+    }
+
+    /* ---- Card C: safety gate feed ---- */
+    const gateFeed = $('#gate-feed');
+    const gateEvents = [
+      ['PASS', 'schema.invoice_total ∈ ℝ⁺'], ['BLOCK', 'fabricated vendor_id: VN-0000'], ['PASS', 'policy.SOX-404 satisfied'],
+      ['PASS', 'counterparty verified (KYC-T2)'], ['BLOCK', 'unbounded loop in plan step 4'], ['PASS', 'idempotency key present'],
+      ['BLOCK', 'citation not in source corpus'], ['PASS', 'PII redaction verified']
+    ];
+    let gi = 0;
+    const pushGate = () => {
+      const [k, msg] = gateEvents[gi++ % gateEvents.length];
+      const li = document.createElement('li');
+      li.className = 'log-line flex items-center gap-2';
+      li.innerHTML = `<span class="w-[46px] shrink-0 rounded px-1.5 py-0.5 text-center text-[9px] tracking-[0.1em] ${k === 'PASS' ? 'bg-cyan-glow/15 text-cyan-glow' : 'bg-silver text-obsidian'}">${k}</span><span class="truncate text-platinum/80">${msg}</span>`;
+      gateFeed.prepend(li);
+      while (gateFeed.children.length > 4) gateFeed.lastChild.remove();
+    };
+    for (let i = 0; i < 4; i++) pushGate();
+    if (!reduced) { let gt = null; whenVisible(gateFeed, () => { if (!gt) gt = setInterval(pushGate, 1500); }, () => { clearInterval(gt); gt = null; }); }
+
+    /* ---- Card D: consensus ---- */
+    const cBars = $$('.c-bar'), cVals = $$('.c-val'), cState = $('#consensus-state');
+    const runConsensus = () => {
+      const target = 0.93 + Math.random() * 0.05;
+      const vals = [target + (Math.random() - .5) * .03, target + (Math.random() - .5) * .03, target + (Math.random() - .5) * .02].map(v => Math.min(.995, v));
+      cState.textContent = 'ROUTING…'; cState.className = 'rounded-full border border-white/15 px-3 py-1 text-chrome';
+      cBars.forEach((b, i) => { b.style.transition = 'none'; b.style.width = '0%'; cVals[i].textContent = '0.00'; });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        cBars.forEach((b, i) => { b.style.transition = `width ${1.1 + i * 0.25}s cubic-bezier(.2,.8,.2,1)`; b.style.width = (vals[i] * 100) + '%'; });
+        setTimeout(() => cVals.forEach((v, i) => v.textContent = vals[i].toFixed(2)), 700);
+        setTimeout(() => { cState.textContent = 'QUORUM REACHED · COMMIT'; cState.className = 'rounded-full border border-cyan-glow/60 bg-cyan-glow/10 px-3 py-1 text-cyan-glow'; }, 1700);
+      }));
+    };
+    if (reduced) { cBars.forEach((b, i) => { b.style.width = [96, 94, 97][i] + '%'; cVals[i].textContent = ['0.96', '0.94', '0.97'][i]; }); cState.textContent = 'QUORUM REACHED · COMMIT'; }
+    else { let ct = null; whenVisible($('#consensus'), () => { if (!ct) { runConsensus(); ct = setInterval(runConsensus, 4800); } }, () => { clearInterval(ct); ct = null; }); }
+
+    /* ---- Simulator ---- */
+    const STAGES = ['Ingest', 'Context', 'Safety Gate', 'Consensus', 'Execute', 'Audit'];
+    const ICONS = ['radio-tower', 'database-zap', 'shield-check', 'git-merge', 'zap', 'file-lock-2'];
+    const SCENARIOS = {
+      finance: { name: 'FINANCIAL ANOMALY', hash: '0x7f3a…c91e', steps: [
+        [0.6, 'Event captured: outbound wire of $4.82M flagged by variance monitor (σ = 4.7).'],
+        [1.1, 'State hydrated: 14 prior transfers, counterparty risk tier B, 90-day velocity profile.'],
+        [1.8, 'Policies SOX-404, AML-7 and Treasury-Limits evaluated. 0 violations, 1 escalation rule matched.'],
+        [3.2, 'Engines α, β, γ converge at 0.97: HOLD transfer and escalate to treasury.'],
+        [1.9, 'Transfer held. Case FA-20931 opened. Treasury on-call paged with full context packet.'],
+        [0.8, 'Execution ledger sealed. Decision traceable to 22 inputs.']
+      ]},
+      supply: { name: 'SUPPLY CHAIN DISRUPTION', hash: '0x2bd8…04fa', steps: [
+        [0.5, 'Event captured: Port of Busan berth closure, 11 inbound containers affected.'],
+        [1.3, 'State hydrated: live inventory across 6 DCs, 3 pre-qualified alternate carriers.'],
+        [1.6, 'Constraints verified: contract SLAs, hazmat routing rules, budget ceiling +4.5%.'],
+        [2.9, 'Engines α, β, γ converge at 0.95: reroute via Kaohsiung on carrier C-2.'],
+        [2.4, 'Bookings confirmed. ETAs updated across 214 downstream orders. Customers notified.'],
+        [0.7, 'Execution ledger sealed. Cost delta +2.1% recorded against approved envelope.']
+      ]},
+      security: { name: 'CREDENTIAL COMPROMISE', hash: '0x91ce…7d33', steps: [
+        [0.4, 'Event captured: impossible-travel login for svc-billing, 2 regions within 6 minutes.'],
+        [1.0, 'State hydrated: token scopes, 30-day access graph, 4 linked service accounts.'],
+        [1.5, 'Policies IAM-Zero-Trust and IR-Playbook-3 verified. Blast radius bounded to 4 identities.'],
+        [2.6, 'Engines α, β, γ converge at 0.98: revoke sessions, rotate keys, isolate workload.'],
+        [2.2, 'Sessions revoked. Keys rotated across 4 accounts. SOC ticket IR-5512 opened.'],
+        [0.6, 'Execution ledger sealed. Chain-of-custody record preserved for forensics.']
+      ]}
+    };
+    const stagesEl = $('#stages'), railFill = $('#rail-fill'), logEl = $('#sim-log');
+    stagesEl.innerHTML = STAGES.map((s, i) => `
+      <li class="stage-node relative flex items-center gap-3 rounded-xl border border-white/10 bg-[#070c1c] p-2.5 md:flex-col md:items-center md:p-3 md:text-center" data-state="idle">
+        <span class="relative z-10 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-midnight"><i data-lucide="${ICONS[i]}" class="h-4 w-4 text-platinum" aria-hidden="true"></i></span>
+        <span class="flex flex-1 items-center justify-between gap-2 md:flex-col md:gap-2">
+          <span class="text-[13px] font-medium text-silver">${s}</span>
+          <span class="badge" data-state="idle">QUEUED</span>
+        </span>
+      </li>`).join('');
+    if (window.lucide) lucide.createIcons();
+    const nodes = $$('.stage-node', stagesEl);
+    const railX = $('#rail-fill-x'), railBar = $('#rail-bar');
+    const setRail = pct => { railFill.style.height = pct + '%'; railX.style.width = pct + '%'; railBar.setAttribute('aria-valuenow', Math.round(pct)); };
+
+    let runId = 0, current = null;
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const stamp = () => new Date().toISOString().slice(11, 23);
+    const log = (html, cls = '') => {
+      const li = document.createElement('li'); li.className = 'log-line ' + cls; li.innerHTML = html; logEl.appendChild(li);
+      logEl.scrollTop = logEl.scrollHeight;
+    };
+    const status = (txt, state) => { const s = $('#sim-status'); s.textContent = txt; s.dataset.state = state; };
+
+    async function run(key) {
+      const id = ++runId, sc = SCENARIOS[key]; current = key;
+      $$('.trigger-btn').forEach(b => b.setAttribute('aria-pressed', b.dataset.trigger === key));
+      $('#replay-btn').disabled = true;
+      $('#sim-name').textContent = sc.name; $('#sim-lat').textContent = '—'; $('#sim-hash').textContent = '—';
+      nodes.forEach(n => { n.dataset.state = 'idle'; const b = $('.badge', n); b.dataset.state = 'idle'; b.textContent = 'QUEUED'; });
+      setRail(0); logEl.innerHTML = '';
+      log(`<span class="text-chrome/70">${stamp()}</span> $ dispatch --trigger=${key} --deterministic`, 'text-chrome');
+      status('RUNNING', 'running');
+      let total = 0;
+      for (let i = 0; i < sc.steps.length; i++) {
+        if (id !== runId) return;
+        const [ms, detail] = sc.steps[i], n = nodes[i], b = $('.badge', n);
+        n.dataset.state = 'running'; b.dataset.state = 'running'; b.textContent = 'RUNNING';
+        $('#stage-title').textContent = `${String(i + 1).padStart(2, '0')} · ${STAGES[i]}`;
+        $('#stage-detail').textContent = detail;
+        await sleep(reduced ? 120 : ms * 120 + 260);
+        if (id !== runId) return;
+        total += ms;
+        n.dataset.state = 'done'; b.dataset.state = 'done'; b.textContent = i === 2 ? 'VERIFIED' : i === 3 ? 'QUORUM' : 'DONE';
+        setRail(((i + 1) / sc.steps.length) * 100);
+        log(`<span class="text-chrome/70">${stamp()}</span> <span class="text-cyan-glow">✓ ${STAGES[i].toUpperCase()}</span> <span class="text-chrome">${ms.toFixed(1)}ms</span> — ${detail}`);
+      }
+      $('#sim-lat').textContent = total.toFixed(1) + 'ms';
+      $('#sim-hash').textContent = sc.hash;
+      $('#stage-title').textContent = 'Pipeline Complete';
+      $('#stage-detail').textContent = `6/6 stages verified in ${total.toFixed(1)}ms of compute. Ledger hash ${sc.hash}. Replay this trigger and the hash will match exactly.`;
+      log(`<span class="text-chrome/70">${stamp()}</span> <span class="text-silver">■ SEALED</span> hash=${sc.hash} total=${total.toFixed(1)}ms`, 'text-silver');
+      status('COMPLETE', 'done');
+      $('#replay-btn').disabled = false;
+    }
+    $$('.trigger-btn').forEach(b => b.addEventListener('click', () => run(b.dataset.trigger)));
+    $('#replay-btn').addEventListener('click', () => current && run(current));
+
+    /* ---- Email dispatch ---- */
+    const form = $('#dispatch-form'), msg = $('#form-msg'), email = $('#email');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const v = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+        msg.textContent = '✕ Enter a valid work email to dispatch your request.'; msg.className = 'mt-4 min-h-[1.25rem] font-mono text-xs tracking-[0.08em] text-platinum';
+        email.setAttribute('aria-invalid', 'true'); email.focus(); return;
+      }
+      email.removeAttribute('aria-invalid');
+      msg.textContent = `✓ Request queued for ${v}. Ticket OL-${Math.floor(100000 + Math.random() * 900000)} · expect contact within 48h.`;
+      msg.className = 'mt-4 min-h-[1.25rem] font-mono text-xs tracking-[0.08em] text-cyan-glow';
+      form.reset();
+    });
+  });
+})();
+</script>
+
+<!-- ============ THREE.JS DYNAMIC LOGIC CORE ============ -->
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const stage = document.getElementById('core-stage');
+const hero = document.getElementById('top');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function webglAvailable() {
+  try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }
+  catch { return false; }
+}
+
+if (!reduced && webglAvailable()) {
+  try { init(); } catch (err) { console.warn('[Operators Logic] WebGL init failed, using CSS fallback.', err); }
+}
+
+function init() {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.setClearColor(0x000000, 0);
+  stage.appendChild(renderer.domElement);
+  renderer.domElement.setAttribute('aria-hidden', 'true');
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0.4, 9.5);
+
+  // Procedural studio environment for chrome reflections (no external HDR)
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envTex = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+  scene.environment = envTex;
+  pmrem.dispose();
+
+  // Cobalt / cyan rim lights
+  const key = new THREE.PointLight(0x0066ff, 40, 30); key.position.set(-4, 2, 3); scene.add(key);
+  const rim = new THREE.PointLight(0x38bdf8, 30, 30); rim.position.set(4, -2, -2); scene.add(rim);
+  scene.add(new THREE.AmbientLight(0x1d4ed8, 0.25));
+
+  // Hierarchy: scrollGroup (scale/recede) > tiltGroup (cursor) > core (spin)
+  const scrollGroup = new THREE.Group(); scene.add(scrollGroup);
+  const tiltGroup = new THREE.Group(); scrollGroup.add(tiltGroup);
+  const core = new THREE.Group(); tiltGroup.add(core);
+
+  // Inner liquid-chrome sphere
+  const chrome = new THREE.Mesh(
+    new THREE.SphereGeometry(1, 96, 96),
+    new THREE.MeshPhysicalMaterial({ color: 0xe2e8f0, metalness: 1, roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 1.35, emissive: 0x0b2a6b, emissiveIntensity: 0.15 })
+  );
+  core.add(chrome);
+
+  // Refractive glass shell
+  const shell = new THREE.Mesh(
+    new THREE.SphereGeometry(1.22, 96, 96),
+    new THREE.MeshPhysicalMaterial({ color: 0xcfe3ff, metalness: 0, roughness: 0.04, transmission: 1, thickness: 0.6, ior: 1.45, iridescence: 0.35, iridescenceIOR: 1.3, envMapIntensity: 1.1, transparent: true, opacity: 1, side: THREE.FrontSide })
+  );
+  core.add(shell);
+
+  // Brushed-silver interlocking rings
+  const brushed = new THREE.MeshPhysicalMaterial({ color: 0xcbd5e1, metalness: 1, roughness: 0.32, clearcoat: 0.4, envMapIntensity: 1.2 });
+  const makeRing = (radius, tube, rx, ry) => {
+    const g = new THREE.Group();
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 32, 220), brushed));
+    // fine engraved tick ring
+    const ticks = new THREE.Mesh(new THREE.TorusGeometry(radius + tube * 2.2, tube * 0.18, 8, 220), new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45 }));
+    g.add(ticks);
+    g.rotation.set(rx, ry, 0);
+    core.add(g);
+    return g;
+  };
+  const ringA = makeRing(1.95, 0.045, Math.PI / 2.4, 0.35);
+  const ringB = makeRing(2.35, 0.035, -Math.PI / 3.1, -0.6);
+
+  // Icosahedral wireframe cage
+  const cage = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(3.05, 1)),
+    new THREE.LineBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.18 })
+  );
+  tiltGroup.add(cage);
+  const cageNodes = new THREE.Points(
+    new THREE.IcosahedronGeometry(3.05, 1),
+    new THREE.PointsMaterial({ color: 0xe2e8f0, size: 0.045, transparent: true, opacity: 0.7, sizeAttenuation: true })
+  );
+  cage.add(cageNodes);
+
+  // Pulsing cobalt particle streams (GPU-animated along each ring's plane)
+  const pixelRatio = renderer.getPixelRatio();
+  const streamMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTime: { value: 0 }, uPR: { value: pixelRatio }, uA: { value: new THREE.Color(0x0066ff) }, uB: { value: new THREE.Color(0x38bdf8) } },
+    vertexShader: `
+      attribute float aAngle; attribute float aRadius; attribute float aSpeed; attribute float aSeed;
+      uniform float uTime; uniform float uPR;
+      varying float vAlpha; varying float vSeed;
+      void main() {
+        float a = aAngle + uTime * aSpeed;
+        float wob = sin(a * 5.0 + aSeed * 12.0 + uTime) * 0.06;
+        vec3 p = vec3(cos(a) * (aRadius + wob), sin(a) * (aRadius + wob), sin(a * 3.0 + aSeed * 6.2831) * 0.09);
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_Position = projectionMatrix * mv;
+        float pulse = 0.5 + 0.5 * sin(uTime * 2.4 + aSeed * 6.2831 - a * 2.0);
+        vAlpha = 0.18 + 0.82 * pow(pulse, 2.0);
+        vSeed = aSeed;
+        gl_PointSize = (1.6 + 3.4 * pulse) * uPR * (9.0 / -mv.z);
+      }`,
+    fragmentShader: `
+      uniform vec3 uA; uniform vec3 uB;
+      varying float vAlpha; varying float vSeed;
+      void main() {
+        float d = length(gl_PointCoord - 0.5);
+        float m = smoothstep(0.5, 0.0, d);
+        gl_FragColor = vec4(mix(uA, uB, vSeed), m * vAlpha);
+      }`
+  });
+  const makeStream = (parent, radius, count) => {
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(count * 3), ang = new Float32Array(count), rad = new Float32Array(count), spd = new Float32Array(count), seed = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      ang[i] = Math.random() * Math.PI * 2;
+      rad[i] = radius + (Math.random() - 0.5) * 0.22;
+      spd[i] = (0.25 + Math.random() * 0.35) * (Math.random() < 0.85 ? 1 : -1);
+      seed[i] = Math.random();
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('aAngle', new THREE.BufferAttribute(ang, 1));
+    g.setAttribute('aRadius', new THREE.BufferAttribute(rad, 1));
+    g.setAttribute('aSpeed', new THREE.BufferAttribute(spd, 1));
+    g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+    g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), radius + 1);
+    const pts = new THREE.Points(g, streamMat);
+    parent.add(pts);
+    return pts;
+  };
+  const isSmall = innerWidth < 768;
+  makeStream(ringA, 1.95, isSmall ? 500 : 900);
+  makeStream(ringB, 2.35, isSmall ? 500 : 900);
+
+  // Distant dust field
+  const dustGeo = new THREE.BufferGeometry();
+  const dustN = isSmall ? 250 : 500, dust = new Float32Array(dustN * 3);
+  for (let i = 0; i < dustN; i++) {
+    const r = 5 + Math.random() * 6, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
+    dust.set([r * Math.sin(p) * Math.cos(t), r * Math.sin(p) * Math.sin(t), r * Math.cos(p) - 3], i * 3);
+  }
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dust, 3));
+  const dustPts = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0x94a3b8, size: 0.025, transparent: true, opacity: 0.5 }));
+  scene.add(dustPts);
+
+  // Orbit controls (drag to orbit, damped momentum)
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = 0.06;
+  controls.enableZoom = false; controls.enablePan = false;
+  controls.rotateSpeed = 0.5;
+  controls.minPolarAngle = Math.PI * 0.3; controls.maxPolarAngle = Math.PI * 0.7;
+  // On touch devices, keep vertical swipe for page scroll
+  if (matchMedia('(pointer: coarse)').matches) controls.enabled = false;
+
+  // Cursor tilt (lerped, clamped to 8°)
+  const MAX_TILT = THREE.MathUtils.degToRad(8);
+  const target = { x: 0, y: 0 }, tilt = { x: 0, y: 0 };
+  addEventListener('pointermove', e => {
+    const nx = (e.clientX / innerWidth) * 2 - 1, ny = (e.clientY / innerHeight) * 2 - 1;
+    target.y = THREE.MathUtils.clamp(nx, -1, 1) * MAX_TILT;
+    target.x = THREE.MathUtils.clamp(ny, -1, 1) * MAX_TILT;
+  }, { passive: true });
+
+  // Resize to container
+  const resize = () => {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.position.z = w / h < 0.9 ? 11.5 : 9.5;
+    camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(stage); resize();
+
+  // Scroll reaction: scale down & recede
+  const scroll = { p: 0 };
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to(scroll, { p: 1, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 1 } });
+  } else {
+    addEventListener('scroll', () => { scroll.p = Math.min(1, Math.max(0, scrollY / hero.offsetHeight)); }, { passive: true });
+  }
+
+  // HUD
+  const hudTx = document.getElementById('hud-tx'), hudTy = document.getElementById('hud-ty'), hudTp = document.getElementById('hud-tp');
+  let hudT = 0;
+
+  // Render loop with viewport-based pausing
+  const clock = new THREE.Clock();
+  let running = false, raf = 0, inView = true;
+  const frame = () => {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+
+    tilt.x += (target.x - tilt.x) * 0.06;
+    tilt.y += (target.y - tilt.y) * 0.06;
+    tiltGroup.rotation.x = tilt.x;
+    tiltGroup.rotation.y = tilt.y;
+
+    core.rotation.y += dt * 0.12;
+    ringA.rotation.z += dt * 0.35;
+    ringB.rotation.z -= dt * 0.26;
+    cage.rotation.y -= dt * 0.05; cage.rotation.x += dt * 0.02;
+    dustPts.rotation.y += dt * 0.01;
+    chrome.material.emissiveIntensity = 0.12 + Math.sin(t * 1.6) * 0.08;
+    streamMat.uniforms.uTime.value = t;
+
+    const s = 1 - scroll.p * 0.5;
+    scrollGroup.scale.setScalar(s);
+    scrollGroup.position.set(0, scroll.p * 0.6, -scroll.p * 4);
+    renderer.domElement.style.opacity = String(1 - scroll.p * 0.75);
+
+    controls.update();
+    renderer.render(scene, camera);
+
+    if ((hudT += dt) > 0.15) {
+      hudT = 0;
+      if (hudTx) hudTx.textContent = THREE.MathUtils.radToDeg(tilt.x).toFixed(2) + '°';
+      if (hudTy) hudTy.textContent = THREE.MathUtils.radToDeg(tilt.y).toFixed(2) + '°';
+      if (hudTp) hudTp.textContent = Math.round(486000 + Math.sin(t * 0.7) * 4200 + Math.random() * 900).toLocaleString('en-US');
+    }
+  };
+  const start = () => { if (!running && inView && !document.hidden) { running = true; clock.getDelta(); frame(); } };
+  const stop = () => { running = false; cancelAnimationFrame(raf); };
+
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; inView ? start() : stop(); }, { threshold: 0 }).observe(hero);
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
+  // If the GPU context is lost, fall back to the CSS core.
+  renderer.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); stop(); stage.classList.remove('webgl-ready'); renderer.domElement.style.display = 'none'; });
+
+  stage.classList.add('webgl-ready');
+  start();
+}
+</script>
+</body>
+</html>
